@@ -1,3 +1,5 @@
+![Python Version](https://img.shields.io/badge/python-3.x-blue.svg) ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![CS50P](https://img.shields.io/badge/CS50P-Completed-green.svg)
+
 # 💰 Pivot
 > A lightweight **CLI** financial management tool built for speed and efficiency.
 
