@@ -1,9 +1,12 @@
 import csv
 import re
+import os
 from datetime import datetime
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+filename = os.path.join(BASE_DIR, "finance.csv")
+
 def main():
-    filename = "finance.csv"
     initialize_csv(filename)
     
     while True:
