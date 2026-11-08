@@ -7,6 +7,10 @@ venv/
 # Testing
 .pytest_cache/
 
+# Build artifacts
+build/
+*.egg-info/
+
 # Pivot's ledger — don't commit personal data
 finance.csv
 
