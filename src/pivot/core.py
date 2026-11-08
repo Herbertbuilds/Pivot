@@ -79,3 +79,43 @@ def read_transactions(path):
                 "Type": row["Type"],
             })
     return transactions
+
+
+def monthly_summary(path):
+    """Group the ledger by month: one dict per month with Income, Expense
+    and Net totals, oldest first. Reuses read_transactions."""
+    buckets = {}
+    for row in read_transactions(path):
+        month = row["Date"][:7]  # YYYY-MM-DD -> YYYY-MM
+        if month not in buckets:
+            buckets[month] = {"Month": month, "Income": 0.0,
+                              "Expense": 0.0, "Net": 0.0}
+        bucket = buckets[month]
+        amount = row["Amount"]
+        if row["Type"].lower() == "expense":
+            bucket["Expense"] += amount
+            bucket["Net"] -= amount
+        else:
+            bucket["Income"] += amount
+            bucket["Net"] += amount
+    return [buckets[month] for month in sorted(buckets)]
+
+
+def read_config(path):
+    """Read a simple config file: `key = value` lines, # comments, blanks
+    ignored. Empty dict when the file doesn't exist."""
+    settings = {}
+    try:
+        with open(path, "r") as file:
+            lines = file.read().splitlines()
+    except FileNotFoundError:
+        return {}
+    for line in lines:
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        key, _, value = line.partition("=")
+        key, value = key.strip(), value.strip()
+        if key and value:
+            settings[key.lower()] = value
+    return settings

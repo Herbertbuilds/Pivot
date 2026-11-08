@@ -3,7 +3,9 @@ import pytest
 from pivot.core import (
     get_balance,
     initialize_csv,
+    monthly_summary,
     normalize_date,
+    read_config,
     read_transactions,
     save_transaction,
     validate_date,
@@ -99,6 +101,74 @@ def test_ledger_line_narrow_terminal_lets_path_overflow():
     long_path = "/home/user/very/deep/dirs/finance.csv"
     line = format_ledger_line(long_path, columns=20)
     assert line.lstrip().startswith("ledger:")
+
+
+def test_monthly_summary_groups_by_month(tmp_path):
+    path = tmp_path / "ledger.csv"
+    initialize_csv(path)
+    save_transaction(path, "2026-01-05", "salary", 1000.0, "Income")
+    save_transaction(path, "2026-01-20", "food", 200.0, "Expense")
+    save_transaction(path, "2026-02-14", "bus", 20.0, "Expense")
+    summary = monthly_summary(path)
+    assert summary == [
+        {"Month": "2026-01", "Income": 1000.0, "Expense": 200.0, "Net": 800.0},
+        {"Month": "2026-02", "Income": 0.0, "Expense": 20.0, "Net": -20.0},
+    ]
+
+
+def test_monthly_summary_empty_ledger(tmp_path):
+    path = tmp_path / "ledger.csv"
+    initialize_csv(path)
+    assert monthly_summary(path) == []
+
+
+def test_render_monthly_monochrome():
+    from pivot.ui import render_monthly
+    rows = [{"Month": "2026-01", "Income": 1000.0,
+             "Expense": 200.0, "Net": 800.0},
+            {"Month": "2026-02", "Income": 0.0,
+             "Expense": 20.0, "Net": -20.0}]
+    out = render_monthly(rows)
+    assert "\x1b[" not in out
+    assert "2026-01" in out and "2026-02" in out
+    assert "Total" in out
+    lines = out.splitlines()
+    assert lines[0].strip().startswith("Month")
+    assert lines[1].startswith("  ----")
+
+
+def test_render_monthly_empty():
+    from pivot.ui import render_monthly
+    assert render_monthly([], enabled=False) == "No transactions yet."
+
+
+def test_read_config_reads_data_key(tmp_path):
+    path = tmp_path / "config"
+    path.write_text("data = /tmp/my-ledger.csv\n")
+    assert read_config(path) == {"data": "/tmp/my-ledger.csv"}
+
+
+def test_read_config_skips_comments_and_blanks(tmp_path):
+    path = tmp_path / "config"
+    path.write_text("# my pivot config\n\ndata = /tmp/my-ledger.csv\n")
+    assert read_config(path) == {"data": "/tmp/my-ledger.csv"}
+
+
+def test_read_config_missing_file(tmp_path):
+    assert read_config(tmp_path / "nope") == {}
+
+
+def test_get_data_path_prefers_env_then_config(monkeypatch, tmp_path):
+    from pivot.cli import get_data_path
+    pivot_dir = tmp_path / ".pivot"
+    pivot_dir.mkdir()
+    config = pivot_dir / "config"
+    config.write_text("data = /tmp/from-config.csv\n")
+    monkeypatch.setenv("HOME", str(tmp_path))  # ~/.pivot/config -> tmp_path
+    monkeypatch.delenv("PIVOT_DATA", raising=False)
+    assert get_data_path() == "/tmp/from-config.csv"
+    monkeypatch.setenv("PIVOT_DATA", "/tmp/from-env.csv")
+    assert get_data_path() == "/tmp/from-env.csv"
 
 
 def test_color_disabled():

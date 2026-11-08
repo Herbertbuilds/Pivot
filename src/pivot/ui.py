@@ -84,3 +84,38 @@ def render_ledger(transactions, balance, enabled=False):
     tone = GREEN if balance >= 0 else RED
     lines.append(color(tone, "  " + total_text, enabled))
     return "\n".join(lines)
+
+
+def render_monthly(summary, enabled=False):
+    """Per-month table: Month, Income, Expense, Net, plus a Total row."""
+    if not summary:
+        return color(DIM, "No transactions yet.", enabled)
+
+    lines = [
+        f"  {'Month':<8} {'Income':>10} {'Expense':>10} {'Net':>11}",
+        "  " + "-" * 43,
+    ]
+    totals = {"Income": 0.0, "Expense": 0.0, "Net": 0.0}
+    for row in summary:
+        for key in totals:
+            totals[key] += row[key]
+        net = signed_amount(row["Net"], row["Net"] < 0)
+        line = (
+            f"  {row['Month']:<8} "
+            f"{signed_amount(row['Income'], False):>10} "
+            f"{signed_amount(row['Expense'], True):>10} "
+            f"{net:>11}"
+        )
+        tone = RED if row["Net"] < 0 else GREEN
+        lines.append(color(tone, line, enabled))
+
+    lines.append("  " + "-" * 43)
+    net = signed_amount(totals["Net"], totals["Net"] < 0)
+    total_line = (
+        f"  {'Total':<8} "
+        f"{signed_amount(totals['Income'], False):>10} "
+        f"{signed_amount(totals['Expense'], True):>10} "
+        f"{net:>11}"
+    )
+    lines.append(color(GREEN if totals["Net"] >= 0 else RED, total_line, enabled))
+    return "\n".join(lines)

@@ -5,7 +5,9 @@ import os
 from pivot.core import (
     get_balance,
     initialize_csv,
+    monthly_summary,
     normalize_date,
+    read_config,
     read_transactions,
     save_transaction,
     validate_date,
@@ -21,20 +23,34 @@ from pivot.ui import (
     colors_enabled,
     format_ledger_line,
     render_ledger,
+    render_monthly,
     signed_amount,
 )
 
 DATA_FILE_ENV = "PIVOT_DATA"
+CONFIG_FILE = ".pivot/config"
+DEFAULT_DATA_FILE = ".pivot/finance.csv"
+
+MENU_ITEMS = [
+    ("1", "Add Transaction"),
+    ("2", "View Balance"),
+    ("3", "View All Transactions"),
+    ("4", "Monthly Summary"),
+    ("5", "Exit"),
+]
 
 
 def get_data_path():
-    """Resolve the ledger location: $PIVOT_DATA, else finance.csv in a fixed
-    place (~/.pivot), so the same ledger is used no matter which directory
-    the terminal is in."""
-    return os.environ.get(
-        DATA_FILE_ENV,
-        os.path.expanduser("~/.pivot/finance.csv"),
-    )
+    """Resolve the ledger location: $PIVOT_DATA, then the `data` setting in
+    ~/.pivot/config, then finance.csv in ~/.pivot — so the same ledger is
+    used no matter which directory the terminal is in."""
+    env_path = os.environ.get(DATA_FILE_ENV)
+    if env_path:
+        return env_path
+    configured = read_config(os.path.expanduser(f"~/{CONFIG_FILE}")).get("data")
+    if configured:
+        return configured
+    return os.path.expanduser(f"~/{DEFAULT_DATA_FILE}")
 
 
 def show_banner(enabled):
@@ -48,9 +64,7 @@ def show_menu(enabled, ledger_path):
     text = padded.lstrip()
     pad = len(padded) - len(text)
     print(" " * pad + color(DIM, text, enabled))
-    for number, label in [("1", "Add Transaction"),
-                          ("2", "View Balance"),
-                          ("3", "Exit")]:
+    for number, label in MENU_ITEMS:
         print(f"{color(CYAN, '[', enabled)}{number}"
               f"{color(CYAN, ']', enabled)} {label}")
 
@@ -98,8 +112,19 @@ def add_transaction(path, enabled):
 
 
 def show_balance(path, enabled):
+    balance = get_balance(path)
+    tone = GREEN if balance >= 0 else RED
+    print(color(tone, f"Current Balance: {signed_amount(balance, balance < 0)}",
+                enabled))
+
+
+def show_all_transactions(path, enabled):
     print(render_ledger(read_transactions(path),
                         get_balance(path), enabled=enabled))
+
+
+def show_monthly_summary(path, enabled):
+    print(render_monthly(monthly_summary(path), enabled=enabled))
 
 
 def main():
@@ -117,8 +142,14 @@ def main():
         elif choice == "2":
             show_balance(data_path, enabled)
         elif choice == "3":
+            show_all_transactions(data_path, enabled)
+        elif choice == "4":
+            show_monthly_summary(data_path, enabled)
+        elif choice == "5":
             print(color(DIM, "Goodbye.", enabled))
             break
+        else:
+            print(color(RED, "Choose 1-5.", enabled))
 
 
 if __name__ == "__main__":

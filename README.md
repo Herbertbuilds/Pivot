@@ -41,6 +41,17 @@ alias pivot='cd /absolute/path/to/Pivot && python3 -m pivot'
 ```
 All thats left is to restart your terminal and your all set up.
 
+### The Ledger Location
+Pivot keeps its ledger at `~/.pivot/finance.csv` - the same file no matter
+which directory you run it from, so your balance never resets just because
+you `cd`'d somewhere else. Precedence:
+
+1. `$PIVOT_DATA` environment variable
+2. `~/.pivot/config` file - a line like `data = /path/to/your.csv`
+3. the default `~/.pivot/finance.csv`
+
+> 💡 The menu header always shows which ledger you're talking to.
+
 ### Project Structure
 ```
 Pivot/
