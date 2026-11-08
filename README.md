@@ -80,7 +80,8 @@ you `cd`'d somewhere else. Precedence:
 2. `~/.pivot/config` file - a line like `data = /path/to/your.csv`
 3. the default `~/.pivot/finance.csv`
 
-> 💡 The menu header always shows which ledger you're talking to.
+So to check which file is active, just look at those two: your
+`$PIVOT_DATA` (unset in most shells) and `~/.pivot/config`.
 
 ### Project Structure
 ```

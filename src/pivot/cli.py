@@ -21,7 +21,6 @@ from pivot.ui import (
     RED,
     color,
     colors_enabled,
-    format_ledger_line,
     render_ledger,
     render_monthly,
     signed_amount,
@@ -58,12 +57,8 @@ def show_banner(enabled):
     print()
 
 
-def show_menu(enabled, ledger_path):
+def show_menu(enabled):
     print(f"\n{color(DIM, '--- Finance Tracker ---', enabled)}")
-    padded = format_ledger_line(ledger_path)
-    text = padded.lstrip()
-    pad = len(padded) - len(text)
-    print(" " * pad + color(DIM, text, enabled))
     for number, label in MENU_ITEMS:
         print(f"{color(CYAN, '[', enabled)}{number}"
               f"{color(CYAN, ']', enabled)} {label}")
@@ -134,7 +129,7 @@ def main():
     show_banner(enabled)
 
     while True:
-        show_menu(enabled, data_path)
+        show_menu(enabled)
         choice = input(f"{color(CYAN, 'Choose an option', enabled)}: ")
 
         if choice == "1":

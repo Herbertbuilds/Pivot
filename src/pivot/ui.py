@@ -6,7 +6,6 @@ dim = rules and meta text.
 """
 
 import os
-import shutil
 import sys
 
 BANNER = """\
@@ -37,19 +36,6 @@ def color(code, text, enabled):
     if not enabled:
         return text
     return f"{code}{text}{RESET}"
-
-
-def format_ledger_line(path, columns=None):
-    """The ledger display line: home dir shown as ~, pushed to the right
-    edge of the terminal (keeping a one-column margin)."""
-    if columns is None:
-        columns = shutil.get_terminal_size(fallback=(80, 24)).columns
-    home = os.path.expanduser("~")
-    if path.startswith(home):
-        path = "~" + path[len(home):]
-    line = f"ledger: {path}"
-    pad = max(0, columns - 1 - len(line))
-    return " " * pad + line
 
 
 def signed_amount(amount, is_expense):
