@@ -66,3 +66,68 @@ def test_read_transactions(tmp_path):
         {"Date": "2026-01-01", "Description": "salary",
          "Amount": 1000.0, "Type": "Income"}
     ]
+
+
+def test_initialize_csv_creates_missing_parent_dirs(tmp_path):
+    path = tmp_path / "pivot" / "ledger.csv"
+    initialize_csv(path)
+    assert path.read_text().strip() == "Date,Description,Amount,Type"
+
+
+def test_get_data_path_defaults_to_home(monkeypatch, tmp_path):
+    from pivot.cli import get_data_path
+    monkeypatch.delenv("PIVOT_DATA", raising=False)
+    monkeypatch.setenv("HOME", str(tmp_path))
+    assert get_data_path() == str(tmp_path / ".pivot" / "finance.csv")
+
+
+def test_get_data_path_honors_pivot_data(monkeypatch):
+    from pivot.cli import get_data_path
+    monkeypatch.setenv("PIVOT_DATA", "/tmp/my-ledger.csv")
+    assert get_data_path() == "/tmp/my-ledger.csv"
+
+
+def test_color_disabled():
+    from pivot.ui import color, CYAN
+    assert color(CYAN, "hi", enabled=False) == "hi"
+
+
+def test_color_enabled():
+    from pivot.ui import color, CYAN
+    assert color(CYAN, "hi", enabled=True) == "\x1b[96mhi\x1b[0m"
+
+
+def test_colors_enabled_no_color_env(monkeypatch):
+    from pivot.ui import colors_enabled
+    monkeypatch.setenv("NO_COLOR", "1")
+    assert colors_enabled() is False
+
+
+def test_signed_amount():
+    from pivot.ui import signed_amount
+    assert signed_amount(200.0, True) == "-200.00"
+    assert signed_amount(1000.0, False) == "+1000.00"
+
+
+def test_render_ledger_monochrome():
+    from pivot.ui import render_ledger
+    rows = [{"Date": "2026-01-01", "Description": "salary",
+             "Amount": 1000.0, "Type": "Income"},
+            {"Date": "2026-01-02", "Description": "food",
+             "Amount": 200.0, "Type": "Expense"}]
+    out = render_ledger(rows, 850.0)
+    assert "\x1b[" not in out
+    assert out == (
+        "  Date       Description              Type          Amount\n"
+        "  -------------------------------------------------------\n"
+        "  2026-01-01 salary                   Income      +1000.00\n"
+        "  2026-01-02 food                     Expense      -200.00\n"
+        "  -------------------------------------------------------\n"
+        "                                         Balance   +850.00"
+    )
+
+
+def test_render_ledger_empty():
+    from pivot.ui import render_ledger
+    assert render_ledger([], 0.0, enabled=False) == "No transactions yet."
+    assert render_ledger([], 0.0, enabled=True) == "\x1b[2mNo transactions yet.\x1b[0m"

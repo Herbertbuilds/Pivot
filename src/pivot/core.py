@@ -5,6 +5,7 @@ unit-test: every function takes its file path as an argument.
 """
 
 import csv
+import os
 import re
 from datetime import datetime
 
@@ -33,6 +34,8 @@ def normalize_date(string):
 
 def initialize_csv(path):
     """Create the ledger file with its header row if it doesn't exist yet."""
+    parent = os.path.dirname(os.path.abspath(path))
+    os.makedirs(parent, exist_ok=True)
     try:
         with open(path, "r") as file:
             return
