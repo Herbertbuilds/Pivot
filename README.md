@@ -1,4 +1,4 @@
-![Python Version](https://img.shields.io/badge/python-3.x-blue.svg) ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![CS50P](https://img.shields.io/badge/CS50P-Completed-green.svg)
+![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg) ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![CS50P](https://img.shields.io/badge/CS50P-Completed-green.svg)
 
 # 💰 Pivot
 > A lightweight **CLI** financial management tool built for speed and efficiency.
@@ -22,10 +22,15 @@ no need to download huge aplications just a simple terminal program that allows 
 * **Environment:** Optimized for **Low end devices**.
 
 ## 🌍 Running From Anywhere
-To run Pivot as a global command, you can set up a terminal alias.
+To run Pivot as a global command, install it as a package:
+
+```bash
+pip install git+https://github.com/Herbertbuilds/Pivot.git
+pivot
+```
 
 ### My Setup (MX Linux + Fish Shell)
-Using the **Fish shell**, I configured Pivot as a system-wide command:
+Using the **Fish shell**, without installing anything system-wide:
 1. `alias Pivot="env PYTHONPATH=~/Code/Pivot/src python3 -m pivot"`
 2. `funcsave Pivot`
 
