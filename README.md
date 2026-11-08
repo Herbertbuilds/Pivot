@@ -3,7 +3,7 @@
 # 💰 Pivot
 > A lightweight **CLI** financial management tool built for speed and efficiency.
 
-![Project Demo](output_demo.gif)
+![Project Demo](docs/output_demo.gif)
 
 ## 🎯 Overview
 Why I built Pivot, was for the final **CS50P** final project, then I realised I have a great idea that I can built on, having a **lightweight**, easy to set up CLI finance tracking program,
@@ -26,12 +26,20 @@ To run Pivot as a global command, you can set up a terminal alias.
 
 ### My Setup (MX Linux + Fish Shell)
 Using the **Fish shell**, I configured Pivot as a system-wide command:
-1. `alias Pivot="python3 /path/to/project.py"`
+1. `alias Pivot="env PYTHONPATH=~/Code/Pivot/src python3 -m pivot"`
 2. `funcsave Pivot`
 
 ### For Bash/Zsh Users
 Add the following to your `.bashrc` or `.zshrc`:
 ```bash
-alias pivot='python3 /absolute/path/to/project.py'
+alias pivot='cd /absolute/path/to/Pivot && python3 -m pivot'
 ```
 All thats left is to restart your terminal and your all set up.
+
+### Project Structure
+```
+Pivot/
+├── docs/              # README media (demo GIF)
+├── src/pivot/         # the app (core logic + terminal interface)
+└── tests/             # pytest suite
+```

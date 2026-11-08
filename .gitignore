@@ -1,1 +1,16 @@
+# Python
 __pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Testing
+.pytest_cache/
+
+# Pivot's ledger — don't commit personal data
+finance.csv
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
