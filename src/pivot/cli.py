@@ -19,6 +19,7 @@ from pivot.ui import (
     RED,
     color,
     colors_enabled,
+    format_ledger_line,
     render_ledger,
     signed_amount,
 )
@@ -43,7 +44,10 @@ def show_banner(enabled):
 
 def show_menu(enabled, ledger_path):
     print(f"\n{color(DIM, '--- Finance Tracker ---', enabled)}")
-    print(color(DIM, f"    ledger: {ledger_path}", enabled))
+    padded = format_ledger_line(ledger_path)
+    text = padded.lstrip()
+    pad = len(padded) - len(text)
+    print(" " * pad + color(DIM, text, enabled))
     for number, label in [("1", "Add Transaction"),
                           ("2", "View Balance"),
                           ("3", "Exit")]:

@@ -87,6 +87,20 @@ def test_get_data_path_honors_pivot_data(monkeypatch):
     assert get_data_path() == "/tmp/my-ledger.csv"
 
 
+def test_ledger_line_right_aligned_and_shorthanded(monkeypatch):
+    from pivot.ui import format_ledger_line
+    monkeypatch.setenv("HOME", "/home/ub")
+    line = format_ledger_line("/home/ub/.pivot/finance.csv", columns=40)
+    assert line == " " * 11 + "ledger: ~/.pivot/finance.csv"
+
+
+def test_ledger_line_narrow_terminal_lets_path_overflow():
+    from pivot.ui import format_ledger_line
+    long_path = "/home/user/very/deep/dirs/finance.csv"
+    line = format_ledger_line(long_path, columns=20)
+    assert line.lstrip().startswith("ledger:")
+
+
 def test_color_disabled():
     from pivot.ui import color, CYAN
     assert color(CYAN, "hi", enabled=False) == "hi"
