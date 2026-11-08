@@ -16,30 +16,60 @@ no need to download huge aplications just a simple terminal program that allows 
 * **Validation:** Robust error handling for dates and currency inputs.
 
 ## 🛠️ Technical Implementation
-* **Language:** Python 3.x
+* **Language:** Python 3.9+
 * **Storage:** CSV (Comma Separated Values)
 * **Testing:** Pytest (Unit tests for core logic)NB! not required to run the program just used it for testing reasons
 * **Environment:** Optimized for **Low end devices**.
 
 ## 🌍 Running From Anywhere
-To run Pivot as a global command, install it as a package:
 
+### Install
 ```bash
 pip install git+https://github.com/Herbertbuilds/Pivot.git
 pivot
 ```
 
-### My Setup (MX Linux + Fish Shell)
-Using the **Fish shell**, without installing anything system-wide:
-1. `alias Pivot="env PYTHONPATH=~/Code/Pivot/src python3 -m pivot"`
-2. `funcsave Pivot`
+Or with [`pipx`](https://pipx.pypa.io/) - recommended for CLI tools, keeps
+Pivot in its own isolated environment and puts the command on your PATH:
 
-### For Bash/Zsh Users
-Add the following to your `.bashrc` or `.zshrc`:
 ```bash
-alias pivot='cd /absolute/path/to/Pivot && python3 -m pivot'
+pipx install git+https://github.com/Herbertbuilds/Pivot.git
 ```
-All thats left is to restart your terminal and your all set up.
+
+### Update
+```bash
+pipx install --force git+https://github.com/Herbertbuilds/Pivot.git
+```
+(For plain `pip` installs: `pip install -U git+https://...`.)
+
+### Uninstall
+```bash
+pipx uninstall pivot-finance
+```
+Uninstalling never touches your data - the ledger stays put (see below).
+
+### Run without installing
+Pivot's ledger follows you everywhere, but if you'd rather run straight from
+a clone than install, an alias works fine:
+
+```fish
+# Fish
+alias Pivot="env PYTHONPATH=~/Code/Pivot/src python3 -m pivot"
+funcsave Pivot
+```
+```bash
+# Bash/Zsh - add to your .bashrc or .zshrc
+alias pivot='cd /path/to/Pivot && PYTHONPATH=src python3 -m pivot'
+```
+
+### The Menu
+```
+[1] Add Transaction        log an income or expense with validation
+[2] View Balance           the running total
+[3] View All Transactions  every entry in an aligned table
+[4] Monthly Summary        income/expense/net grouped by month
+[5] Exit
+```
 
 ### The Ledger Location
 Pivot keeps its ledger at `~/.pivot/finance.csv` - the same file no matter
