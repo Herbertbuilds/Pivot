@@ -6,20 +6,19 @@
 ![Project Demo](docs/output_demo.gif)
 
 ## 🎯 Overview
-Why I built Pivot, was for the final **CS50P** final project, then I realised I have a great idea that I can built on, having a **lightweight**, easy to set up CLI finance tracking program,
-no need to download huge aplications just a simple terminal program that allows you to record your daily expenses/income and calculates your balance from any location in the terminal 
+I built Pivot as my final **CS50P** project, then kept going once it turned out to be genuinely useful. It is a **lightweight**, easy-to-set-up CLI for tracking income and expenses: no large application to install, just a terminal program that records what you spend and tells you your balance from anywhere.
 
-### Key Features:
-* **Instant Logging:** Quickly add transactions with Descriptions CLI.
-* **Data Persistence:** Automatically saves to a local CSV file.
-* **Summary Reports:** Easily calculate your real time balance.
-* **Validation:** Robust error handling for dates and currency inputs.
+### Key features
+* **Instant logging:** add a transaction without leaving the terminal.
+* **Data persistence:** everything is saved to a local CSV file.
+* **Summary reports:** your running balance, calculated in real time.
+* **Validation:** clear errors for bad dates and currency input.
 
 ## 🛠️ Technical Implementation
 * **Language:** Python 3.9+
 * **Storage:** CSV (Comma Separated Values)
-* **Testing:** Pytest (Unit tests for core logic)NB! not required to run the program just used it for testing reasons
-* **Environment:** Optimized for **Low end devices**.
+* **Testing:** Pytest unit tests for the core logic (not needed to run the program)
+* **Environment:** Optimized for **low-end devices**.
 
 ## 🌍 Running From Anywhere
 
