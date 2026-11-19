@@ -1,4 +1,4 @@
-![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg) ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![CS50P](https://img.shields.io/badge/CS50P-Completed-green.svg)
+![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg) ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![CS50P](https://img.shields.io/badge/CS50P-Completed-green.svg)
 
 # 💰 Pivot
 > A lightweight **CLI** financial management tool built for speed and efficiency.
@@ -15,7 +15,7 @@ I built Pivot as my final **CS50P** project, then kept going once it turned out 
 * **Validation:** clear errors for bad dates and currency input.
 
 ## 🛠️ Technical Implementation
-* **Language:** Python 3.9+
+* **Language:** Python 3.10+
 * **Storage:** CSV (Comma Separated Values)
 * **Testing:** Pytest unit tests for the core logic (not needed to run the program)
 * **Environment:** Optimized for **low-end devices**.
